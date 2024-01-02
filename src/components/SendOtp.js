@@ -17,14 +17,15 @@ const LoginPage = () => {
       setTimeout(() => {
         dispatch(setLoader(false));
         // Simulate sending OTP to the mobile number
-        navigate('/otp-verification', { state: { mobileNumber } });
+        navigate('/otp-verification', { state: { mobileNumber,otp: '1234' } });
       }, 2000);
     }
   };
 
   const validateMobileNumber = () => {
     // Simple validation for a 10-digit mobile number
-    if (/^\d{10}$/.test(mobileNumber)) {
+    const mobile=  /^\d{10}$/.test(mobileNumber)
+    if (mobile || mobile==="9926452835") {
       return true;
     } else {
       alert('Invalid Mobile Number');

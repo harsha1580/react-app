@@ -8,6 +8,7 @@ const OTPVerificationPage = ({ location }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [otp, setOtp] = useState('');
+  // const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const handleVerifyOtp = () => {
     // Simulate API call for OTP verification
@@ -16,15 +17,18 @@ const OTPVerificationPage = ({ location }) => {
 
       setTimeout(() => {
         dispatch(setLoader(false));
-        alert('OTP Verified Successfully');
-        navigate('/home');
+
+          alert('OTP Verified Successfully');
+          navigate('/home');
+        
       }, 2000);
     }
   };
 
   const validateOtp = () => {
     // Simple validation for a 4-digit OTP
-    if (/^\d{4}$/.test(otp)) {
+    const isValidOtp= /^\d{4}$/.test(otp)  
+    if (isValidOtp && otp === '1234') {
       return true;
     } else {
       alert('Invalid OTP');
