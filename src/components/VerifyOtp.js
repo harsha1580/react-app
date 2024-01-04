@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setLoader } from '../actions/loderAction';
+import { toast } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css'; 
+import '../style/Login.css'
 
 const OTPVerificationPage = ({ location }) => {
   const navigate = useNavigate();
@@ -17,9 +20,8 @@ const OTPVerificationPage = ({ location }) => {
 
       setTimeout(() => {
         dispatch(setLoader(false));
-
-          alert('OTP Verified Successfully');
-          navigate('/home');
+          toast.success('OTP Verified Successfully');
+          navigate('/homePage');
         
       }, 2000);
     }
@@ -31,7 +33,7 @@ const OTPVerificationPage = ({ location }) => {
     if (isValidOtp && otp === '1234') {
       return true;
     } else {
-      alert('Invalid OTP');
+      toast.error('Invalid OTP');
       return false;
     }
   };
@@ -40,9 +42,9 @@ const OTPVerificationPage = ({ location }) => {
 
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px', backgroundColor: '#f0f0f0', padding: '20px' }}>
+    <div  className='container' style={{ textAlign: 'center', marginTop: '50px', backgroundColor: '#f0f0f0', padding: '50px' }}>
       <h1>OTP Verification</h1>
-      <p>Enter the OTP sent to {mobileNumber}</p>
+      <p>Enter the OTP sent to mobile{mobileNumber}</p>
       <input
         type="text"
         placeholder="Enter OTP"
@@ -50,7 +52,7 @@ const OTPVerificationPage = ({ location }) => {
         onChange={(e) => setOtp(e.target.value)}
         style={{ padding: '10px', margin: '10px' }}
       />
-      <button
+      <button className='button'
         onClick={handleVerifyOtp}
         style={{ padding: '10px', margin: '10px', cursor: 'pointer' }}
       >

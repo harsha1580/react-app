@@ -1,0 +1,33 @@
+/* ViewProfile.css */
+.profile-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .profile-table th, .profile-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .profile-table th {
+    background-color: #27b95f;
+  }
+  
+  .button {
+    padding: 8px; /* Adjusted padding */
+    margin-right: 5px; /* Added margin */
+    font-size: 12px; /* Adjusted font size */
+    cursor: pointer;
+    color: #040404;
+    width: 40%;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .profile-table td button {
+    vertical-align: middle;
+  }
+  

@@ -1,0 +1,54 @@
+/* HomePage.css */
+.header {
+    background: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+  }
+  
+  .header h2 {
+    flex: 1;
+  }
+  
+  .logout-button {
+    width: 6%;
+    padding: 10px;
+    background-color: #d7e4d8;
+    color: #040404;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .sidebar {
+    width: 200px;
+    background: #f4f4f4;
+    padding: 10px;
+  }
+  
+  .sidebar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .sidebar li {
+    margin: 5px;
+    cursor: pointer;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .footer {
+    background: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+  }
