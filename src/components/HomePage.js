@@ -10,6 +10,7 @@ const HomePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+
   useEffect(() => {
     const isLoggedIn = sessionStorage.getItem('LoggedIn');
     if (!isLoggedIn) {
@@ -31,15 +32,14 @@ const HomePage = () => {
         <button style={{ padding: '8px', cursor: 'pointer', marginLeft: 'auto' }} onClick={handleLogout}>Logout</button>
       </header>
 
-      
       <aside style={{ width: '200px', background: '#f4f4f4', padding: '10px' }}>
         <ul style={{ listStyleType: 'none', padding: '0' }}>
-          <li style={{ margin: '5px', cursor: 'pointer' }}>
+          <ul style={{ margin: '5px', cursor: 'pointer' }}>
             <Link to="/add-profile">Add Profile</Link>
-          </li>
-          <li style={{ margin: '5px', cursor: 'pointer' }}>
+          </ul>
+          <ul style={{ margin: '5px', cursor: 'pointer' }}>
             <Link to="/view-profile">View Profile</Link>
-          </li>
+          </ul>
         </ul>
       </aside>
 

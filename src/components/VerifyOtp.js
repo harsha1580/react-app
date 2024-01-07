@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setLoader } from '../actions/loderAction';
+import { verifyOtp,setLoader } from '../actions/loderAction';
 import { toast } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css'; 
 import '../style/Login.css'
@@ -11,14 +11,15 @@ const OTPVerificationPage = ({ location }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [otp, setOtp] = useState('');
-  // const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleVerifyOtp = () => {
-    // Simulate API call for OTP verification
     if (validateOtp()) {
+      setIsLoading(true);
       dispatch(setLoader(true));
 
       setTimeout(() => {
+        setIsLoading(false);
         dispatch(setLoader(false));
           toast.success('OTP Verified Successfully');
           navigate('/homePage');
@@ -55,8 +56,9 @@ const OTPVerificationPage = ({ location }) => {
       <button className='button'
         onClick={handleVerifyOtp}
         style={{ padding: '10px', margin: '10px', cursor: 'pointer' }}
+        disabled={isLoading} 
       >
-        Verify OTP
+        {isLoading ? 'Verifying OTP...' : 'Verify OTP'}
       </button>
     </div>
   );

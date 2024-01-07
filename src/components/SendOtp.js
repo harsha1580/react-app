@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { sendOtp } from '../actions/loderAction';
+import { sendOtp, setLoader } from '../actions/loderAction'; // Assuming setLoader is an action
 import { toast } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css'; 
 import '../style/Login.css';
@@ -11,18 +11,29 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [mobileNumber, setMobileNumber] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSendOtp = () => {
+  const handleSendOtp = async () => {
     // Simulate API call for mobile number validation
     if (validateMobileNumber()) {
-      dispatch(sendOtp(true));
+      setIsLoading(true); // Show loader
+      dispatch(setLoader(true)); // Show loader
 
-      setTimeout(() => {
-        dispatch(sendOtp(false));
-        sessionStorage.setItem("LoggedIn",true)
-        // Simulate sending OTP to the mobile number
-        navigate('/otp-verification', { state: { mobileNumber, otp: '1234' } });
-      }, 2000);
+      try {
+        await dispatch(sendOtp(true)); // Simulate sending OTP to the mobile number
+
+        setTimeout(() => {
+          setIsLoading(false); // Hide loader
+          dispatch(setLoader(false)); // Hide loader
+          sessionStorage.setItem("LoggedIn", true);
+          navigate('/otp-verification', { state: { mobileNumber, otp: '1234' } });
+        }, 2000);
+      } catch (error) {
+        setIsLoading(false); // Hide loader in case of an error
+        dispatch(setLoader(false)); // Hide loader in case of an error
+        console.error('Error sending OTP:', error);
+        toast.error('Error sending OTP. Please try again.'); // Display an error message
+      }
     }
   };
 
@@ -30,13 +41,14 @@ const LoginPage = () => {
     // Simple validation for a 10-digit mobile number
     const isValidMobile = /^\d{10}$/.test(mobileNumber);
     if (isValidMobile || mobileNumber === '9926452835') {
-      toast.success('send otp on mobile');
+      toast.success('Send OTP on mobile');
       return true;
     } else {
       toast.error('Invalid Mobile Number'); // Use toast to display an error message
       return false;
     }
   };
+
   useEffect(() => {
     const isLoggedIn = sessionStorage.getItem('LoggedIn');
     if (isLoggedIn) {
@@ -60,11 +72,13 @@ const LoginPage = () => {
         onClick={handleSendOtp}
         className="button"
         style={{ padding: '8px', margin: '15px', cursor: 'pointer' }}
+       disabled={isLoading} // Disable the button while loading
       >
-        Send OTP
+        {isLoading ? 'Sending OTP...' : 'Send OTP'}
       </button>
     </div>
   );
 };
 
 export default LoginPage;
+

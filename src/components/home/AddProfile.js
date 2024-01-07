@@ -1,12 +1,15 @@
 // AddProfile.js
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'; 
+import { addProfile } from '../../actions/loderAction';
 import 'react-toastify/dist/ReactToastify.css'; 
 import '../../style/AddProfile.css';
 
 const AddProfile = () => {
-  const navigate=useNavigate()
+  const dispatch = useDispatch();
+  const navigate=useNavigate()  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -16,43 +19,53 @@ const AddProfile = () => {
   });
 
   const [errors, setErrors] = useState({});
-
+  const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
+    setErrors({
+      ...errors,
+      [name]: '',
+    });
+    // setFormData({ ...formData, [e.target.name]: e.target.value })
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validationErrors = validateForm(formData);
-    if (Object.keys(validationErrors).length === 0) {
-      // Store form data in localStorage
-      saveFormDataToLocalStorage(formData);
-      console.log('Form submitted:', formData);
-    } else {
-      setErrors(validationErrors);
+    setLoading(true)
+    const newErrors = {};
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'First Name is required';
     }
-  };
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Last Name is required';
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Invalid email address';
+    }
+    if (!formData.password.trim()) {
+      newErrors.password = 'Password is required';
+    }
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
 
-  const saveFormDataToLocalStorage = (formData) => {
-    const storedData = JSON.parse(localStorage.getItem('userData')) || [];
-    let existingUser=[]
-    if(storedData){
-      try{
-       existingUser=storedData
-       if(!Array.isArray(existingUser)){
-        console.error('Existing profiles is not an array.');
-        existingUser=[];
-       }
-      }catch(error){
-        console.error('Error parsing existing profiles:', error.message);
-      }
+    // If there are validation errors, set them and prevent form submission
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setLoading(false);
+      return;
     }
-    storedData.push(formData);
-    localStorage.setItem('userData', JSON.stringify(storedData));
+
+    // Dispatch an action to add the profile to the Redux store
+    dispatch(addProfile(formData));
+
+    // Reset form data and errors after submission
     setFormData({
       firstName: '',
       lastName: '',
@@ -60,47 +73,13 @@ const AddProfile = () => {
       password: '',
       confirmPassword: '',
     });
-  
+    setErrors({});
     toast.success('Profile added successfully!');
-    navigate('/homePage')
+      navigate('/homePage');
+      setLoading(false);
   };
-
-  const validateForm = (data) => {
-    let errors = {};
-    if (!data.firstName.trim()) {
-      errors.firstName = 'First name is required';
-    }
-
-    if (!data.lastName.trim()) {
-      errors.lastName = 'Last name is required';
-    }
-
-    if (!data.email.trim()) {
-      errors.email = 'Email is required';
-    } else if (!isValidEmail(data.email)) {
-      errors.email = 'Invalid email address';
-    }
-
-    if (!data.password.trim()) {
-      errors.password = 'Password is required';
-    } else if (data.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters long';
-    }
-
-    if (data.password !== data.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
-    }
-
-    return errors;
-  };
-
-  const isValidEmail = (email) => {
-    // Basic email validation (you can use a library or regex for more comprehensive validation)
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  };
-
   return (
-    <div >
+    
       <div className="form-container">
         
         <form onSubmit={handleSubmit} className="form">
@@ -167,10 +146,12 @@ const AddProfile = () => {
             )}
           </div>
 
-          <button className='button' type="submit">Submit</button>
+          <button className='button' type="submit">
+             {loading ? 'Submitting...' : 'Submit'}
+          </button>
         </form>
       </div>
-    </div>
+    
   );
 };
 
